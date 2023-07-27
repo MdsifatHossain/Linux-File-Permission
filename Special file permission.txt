@@ -1,0 +1,100 @@
+***********************Advanced File Permission in Linux********************
+
+Advanced File Permissions in Linux
+
+Here we will discuss about the 3 special attributes other than the common read/write/execute.
+Example:
+drwxrwxrwt - Sticky Bits - chmod 1777
+drwsrwxrwx - SUID set - chmod 4777
+drwxrwsrwx - SGID set - chmod 2777
+
+--------------------------------------------------------------------------------
+
+Sticky bit
+
+Sticky bits are mainly set on directories.
+If the sticky bit is set for a directory, only the owner of that directory or the owner 
+of a file can delete or rename a file within that directory.
+
+Example:
+Consider you have a directory " test ".
+chmod it to " 777 ". This gives permissions for all the users to read, write and execute.
+chmod +t test
+
+Example: ls -al
+drwxrwxrwt 2 a1 a1 4096 Jun 13 2008 .
+-rw-rw-r-- 1 a1 a1 0 Jun 11 17:30 1.txt
+-rw-rw-r-- 1 b2 b2 0 Jun 11 22:52 2.txt
+
+From the above example a1 is the owner of the test directory.
+a1 can delete or rename the files 1.txt and 2.txt.
+b2 can delete or rename the file 2.txt only.
+
+--------------------------------------------------------------------------------
+
+SUID - [ Set User ID ]
+
+SUID bit is set for files ( mainly for scripts ).
+The SUID permission makes a script to run as the user who is the owner of the script, 
+rather than the user who started it.
+
+Example:
+If a1 is the owner of the script and b2 tries to run the same script, the script runs 
+with the ownership of a1. If the root user wants to give permissions for some scripts to 
+run by different users, he can set the SUID bit for that particular script.
+So if any user on the system starts that script, it will run under the root ownership.
+
+Note:
+root user must be very carefull with this.
+
+
+-------------------------------------------------------------------------------
+
+
+SGID - [ Set Group ID ]
+
+If a file is SGID, it will run with the privileges of the files group owner, 
+instead of the privileges of the person running the program. This permission set also can make 
+a similar impact. Here the script runs under the groups ownership.
+
+You can also set SGID for directories.
+Consider you have given 2777 permission for a directory. Any files created by any users under 
+this directory will come as follows.
+
+Example:
+-rw-rw-r-- 1 b2 a1 0 Jun 11 17:30 1.txt
+
+In the above example you can see that the owner of the file 1.txt is b2 and the group owner is 
+a1. So both b2 and a1 will have access to the file 1.txt.
+
+Now lets make this more intresting and complicated.
+Create a directory "test". Chmod it to 2777. Add sticky bit to it.
+
+Example:
+mkdir test
+chmod 2777 test
+chmod +t test
+
+ls -al test
+drwxrwsrwt 2 a1 a1 4096 Jun 13 2008 test
+
+From the above permission set you can understand that SGID and sticky bit is set for the 
+folder "test". Now any user can create files under the test directory.
+
+Example:
+drwxrwsrwt 2 a1 a1 4096 Jun 13 2008 .
+-rw-rw-r-- 1 b2 a1 0 Jun 11 17:30 1.txt
+-rw-rw-r-- 1 c3 a1 0 Jun 11 17:30 2.txt
+-rw-rw-r-- 1 d4 a1 0 Jun 11 17:30 3.txt
+
+So all the a1 user has access to all the files under the test directory. He can edit, rename 
+or remove the file. b2 user has access to 1.txt only, c3 has access to 2.txt only...
+
+If sticky bit was not set for the test directory, any user can delete any files from the test 
+directory, since the test directory has 777 permissions.
+But now it not possible.
+
+Example:
+If d4 tries to remove 1.txt
+rm -f 1.txt
+rm: cannot remove `1.txt': Operation not permitted

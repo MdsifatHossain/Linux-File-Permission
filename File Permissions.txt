@@ -1,0 +1,222 @@
+File and Derectory Permission
+***************************************
+
+r=read -4
+w=write -2
+x=excecution -1
+-=no permission -0
+
+**To see file permission:
+$ls -l
+$ls -ld derectory name or path
+$ll   (long list)
+
+**To known command or file location:
+$which file or command name
+
+**File type:
+   In Linux there are basically three types of files :
+	1) Ordinary / Regular file (-)
+	2) Derectory file (d)
+	3) Special files
+**Special are five types 
+	1. Block file(b)
+	2. Character device file(c)
+	3. Named pipe file or just pipe file(p)
+	4. Symbolic link or link file(l)
+	5. Socket file(s)
+
+*To show block file :
+	#ls -l /dev | grep "b"
+*To show Character file :
+	#ls -l /dev | grep "c"
+*To show link file :
+	#ls -l /dev | grep "l"
+*To show pipe file :
+	#ls -l /dev | grep "p"
+*To show socket file :
+	#ls -l /dev | grep "s"
+
+***Changing file or derectory permission:
+
+	#chmod permission file name or path
+ there are two way to use the command:
+	1. Absolute (numeric) mode
+	2. symbolic mode
+
+**Absolute or numeric mode:
+	#chmod 764 text
+
+**Symbolic mode:
+    Operator:
+	'+' = add permission
+	'-' = remove permission
+	'=' = set permission and override the permission set earlier
+	
+	#chmod u+x file1
+	#chmod u-x file1
+
+	#chmod o=rw file1
+	#chmod a=rwx file1
+	#chmod u=rwx file1
+	#chmod g=rw file1
+
+***Changing Ownership:
+
+*To change user or owner :
+	#chown user name  file name or derectory name
+	#chown sifat taxt
+*To change user or owner :
+	#chgrp group name  file name or derectory name
+	#chgrp abc taxt
+*To change both user and group ownership by a single command:
+	#chown user name:group name file name or derectory name
+	#chown sifat:abc taxt
+
+
+		ACL-Access Control List / Advanced File Permission
+*************************************************************************************************************
+
+You can set different permission for different user on a single file or derectory.
+we can set specific permission on specific file or derectory by ACL.
+
+**we can indicate ACL on a file or derectoy by '+' sign.
+
+**To see ACL permission:
+	#getfacl	file name or derectory path
+
+**Set, Change, Modifing ACLs:
+
+*For user:
+	#setfacl -m u:user name:permission file name or derectory name / path
+Example:
+	#setfacl -m u:sifat:rwx /a/file1
+	#setfacl -m u:sifat:7 /a/file1
+*For Group:
+	#setfacl -m g:group name:permission file name or derectory name / path
+Example:
+	#setfacl -m g:abc:rw /a/file1
+	#setfacl -m g:abc:6 /a/file1
+*For Others:
+	#setfacl -m o::permission file name or derectory name / path
+Example:
+	#setfacl -m o::r /a/file1
+	#setfacl -m o::4 /a/file1
+
+*Avobe all permission by a single command:
+	#setfacl -m u:user name:permission,g:group name:permission,o::permission file name or derectory name / path
+
+
+***Default ACL:
+ 
+Default ACL can only be applied to derectories. 
+they determine the permissions a file system object inherits from it's parent derectory when it is created.
+
+**set default ACL:
+
+*For user:
+	#setfacl -m d:u:user name:permission derectory name / path
+Example:
+	#setfacl -m d:u:sifat:rwx /a
+	#setfacl -m d:u:sifat:7 /a
+	
+*For Group:
+	#setfacl -m d:g:group name:permission derectory name / path
+Example:
+	#setfacl -m d:g:abc:rw /a
+	#setfacl -m d:g:abc:6 /a
+
+*For Others:
+	#setfacl -m d:o::permission derectory name / path
+Example:
+	#setfacl -m d:o::r /a
+	#setfacl -m d:o::4 /a
+
+*Avobe all permission by a single command:
+	#setfacl -m d:u:user name:permission,d:g:group name:permission,d:o::permission derectory name / path
+
+**Mixed permission:
+	#setfacl -m u:user name:permission,d:g:group name:permission,o::permission derectory name / path
+
+***Delete or Remove ACL:
+
+**Delete an ACL:
+	#setfacl -x u:user name file or derectory name / path
+	#setfacl -x g:group name file or derectory name / path
+	#setfacl -x o:  file or derectory name / path
+
+**Delete an default ACL:
+	#setfacl -x d:u:user name derectory name / path
+	#setfacl -x d:g:group name derectory name / path
+	#setfacl -x d:o:  derectory name / path
+
+**Delete all default ACL:
+	#setfacl -k derectory name or path
+
+**Delete all ACL and all default ACL:
+	#setfacl -b file or derectory name / path
+
+
+
+
+
+
+	Special File Permission (SUID, SGID, Sticky bit) 
+**************************************************************************************************************
+
+There are three types special file permissions:
+
+	1. Set User ID (SUID)
+	2. Set Group ID (SGID)
+	3. Sticky Bit
+
+*Symbolic and Numeric value of SUID:
+	s and 4
+
+*Symbolic and Numeric value of SGID:
+	g and 2
+
+*Symbolic and Numeric value of Sticky Bit:
+	t and 1
+
+**To set SUID:
+	#chmod u+s file name/path
+	#chmod 4765 file name/path
+
+**To set SGID:
+	#chmod g+s file name/path
+	#chmod 2765 file name/path
+
+**To set Sticky Bit:
+	#chmod o+t file name/path
+	#chmod 1765 file name/path
+
+***To Remove SUID,SGID & Sticky Bit:
+	#chmod u-s file name/path
+	#chmod g-s file name/path
+	#chmod o-t file name/path
+
+***To find all files with SUID permission:
+	#find / -perm -4000
+	#find / -perm -4000 -print
+
+***To find all files with SGID permission:
+	#find / -perm -2000
+	#find / -perm -2000 -print
+
+***To find all files with Sticky Bit permission:
+	#find / -perm -1000
+	#find / -perm -1000 -print
+
+ 		Umask
+umask means user mask
+umask file location 
+#cat /etc/bashrc
+file and directory default permission define into this file.
+
+
+
+
+
+
+
