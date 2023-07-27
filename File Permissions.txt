@@ -214,6 +214,8 @@ umask file location
 #cat /etc/bashrc
 file and directory default permission define into this file.
 
+next topics advance file permission
+
 
 
 
